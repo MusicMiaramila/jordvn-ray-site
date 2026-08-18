@@ -200,6 +200,23 @@ if (burger) {
     const videoId = card.getAttribute('data-tiktok-id');
     const tiktokUrl = card.getAttribute('data-tiktok-url');
     const instagramUrl = card.getAttribute('data-instagram-url');
+    const youtubeId = card.getAttribute('data-youtube-id');
+
+    // YouTube fournit un iframe natif qui remplit proprement la carte (16:9), sans les
+    // problèmes de largeur minimale/rognage de TikTok ou Instagram : pas besoin de la même
+    // mise à l'échelle, un simple iframe suffit.
+    if (youtubeId) {
+      card.style.height = card.getBoundingClientRect().height + 'px';
+      card.innerHTML =
+        '<iframe src="https://www.youtube-nocookie.com/embed/' + youtubeId + '?autoplay=1&rel=0" ' +
+        'title="Vidéo YouTube" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" ' +
+        'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; ' +
+        'picture-in-picture" allowfullscreen></iframe>';
+      card.classList.add('video-card--yt');
+      card.style.backgroundImage = '';
+      return;
+    }
+
     const platform = instagramUrl ? 'instagram' : 'tiktok';
     const url = instagramUrl || tiktokUrl;
     if (!url) return;
